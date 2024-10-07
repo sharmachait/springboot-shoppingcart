@@ -39,13 +39,14 @@ public class ImageService implements IImageService {
             Image img = getImageById(id);
             imageRepository.delete(img);
         }catch (Exception e) {
+            log.error(e.getMessage());
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
     }
     @Transactional
     @Override
-    public List<ImageDto> saveImage(List<MultipartFile> images, Long productId) {
+    public List<ImageDto> saveImages(List<MultipartFile> images, Long productId) {
         try {
             Product product = productService.getProductById(productId);
             List<ImageDto> imageDtos = new ArrayList<>();
@@ -56,7 +57,7 @@ public class ImageService implements IImageService {
                     img.setFileType(image.getContentType());
                     img.setImage(new SerialBlob(image.getBytes()));
                     img = imageRepository.save(img);
-                    img.setDownloadUrl("/image/" + img.getId());
+                    img.setDownloadUrl("/download/" + img.getId());
                     img.setProduct(product);
 //                    img = imageRepository.save(img);
                     imageDtos.add(mapImageToDto(img));
@@ -68,7 +69,7 @@ public class ImageService implements IImageService {
                 }
             }
             return imageDtos;
-        } catch (ProductNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -88,7 +89,7 @@ public class ImageService implements IImageService {
             img.setFilename(image.getOriginalFilename());
             img.setFileType(image.getContentType());
             img.setImage(new SerialBlob(image.getBytes()));
-            img.setDownloadUrl("/image/" + imageId);
+            img.setDownloadUrl("/download/" + imageId);
             imageRepository.save(img);
         }catch (Exception e) {
             e.printStackTrace();

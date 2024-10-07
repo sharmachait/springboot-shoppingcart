@@ -46,7 +46,7 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public Category addCategory(AddCategoryDto category) {
+    public Category addCategory(AddCategoryDto category) throws AlreadyExistsException {
         Category existing = categoryRepository.findByName(category.getName());
         if(existing != null) {
             throw new AlreadyExistsException("Can not create, category with this name already exists");

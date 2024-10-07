@@ -3,6 +3,7 @@ package com.sharmachait.shoppingcart.service.product;
 import com.sharmachait.shoppingcart.dtos.add.AddProductDto;
 import com.sharmachait.shoppingcart.dtos.update.UpdateProductDto;
 import com.sharmachait.shoppingcart.exceptions.ProductNotFoundException;
+import com.sharmachait.shoppingcart.exceptions.ResourceNotFoundException;
 import com.sharmachait.shoppingcart.model.Category;
 import com.sharmachait.shoppingcart.model.Product;
 import com.sharmachait.shoppingcart.repository.CategoryRepository;
@@ -58,13 +59,13 @@ public class ProductService implements IProductService {
         return product;
     }
     @Override
-    public Product getProductById(Long id) throws ProductNotFoundException {
+    public Product getProductById(Long id) throws ResourceNotFoundException {
         return productRepository.findById(id)
-                .orElseThrow(()->new ProductNotFoundException("Product not found"));
+                .orElseThrow(()->new ResourceNotFoundException("Product not found"));
     }
 
     @Override
-    public void deleteProductById(Long id) throws ProductNotFoundException {
+    public void deleteProductById(Long id) throws ResourceNotFoundException {
 //        productRepository.findById(id).ifPresentOrElse(
 //                product -> productRepository.delete(product)
 //                , () -> new ProductNotFoundException("Product not found")
@@ -73,7 +74,7 @@ public class ProductService implements IProductService {
             Product product = productRepository.findById(id).get();
             productRepository.delete(product);
         }catch(NoSuchElementException e){
-            throw new ProductNotFoundException("Product not found");
+            throw new ResourceNotFoundException("Product not found");
         }
     }
 

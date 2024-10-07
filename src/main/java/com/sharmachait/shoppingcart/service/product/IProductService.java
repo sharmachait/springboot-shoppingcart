@@ -3,14 +3,15 @@ package com.sharmachait.shoppingcart.service.product;
 import com.sharmachait.shoppingcart.dtos.add.AddProductDto;
 import com.sharmachait.shoppingcart.dtos.update.UpdateProductDto;
 import com.sharmachait.shoppingcart.exceptions.ProductNotFoundException;
+import com.sharmachait.shoppingcart.exceptions.ResourceNotFoundException;
 import com.sharmachait.shoppingcart.model.Product;
 
 import java.util.List;
 
 public interface IProductService {
     Product addProduct(AddProductDto addProductDto);
-    Product getProductById(Long id) throws ProductNotFoundException;
-    void deleteProductById(Long id) throws ProductNotFoundException;
+    Product getProductById(Long id) throws ResourceNotFoundException;
+    void deleteProductById(Long id) throws ResourceNotFoundException;
     Product updateProduct(UpdateProductDto updateProductDto, Long id);
     List<Product> getAllProducts();
     List<Product> getProductsByCategory(String category);

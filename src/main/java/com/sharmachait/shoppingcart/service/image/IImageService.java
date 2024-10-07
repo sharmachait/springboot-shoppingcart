@@ -10,6 +10,6 @@ import java.util.List;
 public interface IImageService {
     Image getImageById(Long id) throws ResourceNotFoundException;
     void deleteImageById(Long id);
-    List<ImageDto> saveImage(List<MultipartFile> image, Long productId);
+    List<ImageDto> saveImages(List<MultipartFile> image, Long productId);
     void updateImage(MultipartFile image, Long imageId);
 }
