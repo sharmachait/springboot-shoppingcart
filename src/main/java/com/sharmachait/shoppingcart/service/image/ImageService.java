@@ -27,10 +27,17 @@ public class ImageService implements IImageService {
     private final ImageRepository imageRepository;
     @Autowired
     private final IProductService productService;
+
     @Override
+    @Transactional
     public Image getImageById(Long id) throws ResourceNotFoundException {
-        return imageRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("Image not found with id " + id));
+        try {
+            return imageRepository.findById(id).orElseThrow(() ->
+                    new ResourceNotFoundException("Image not found for ID: " + id));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new ResourceNotFoundException(e.getMessage());
+        }
     }
 
     @Override

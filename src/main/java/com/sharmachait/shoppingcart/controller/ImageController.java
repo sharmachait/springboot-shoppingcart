@@ -28,7 +28,7 @@ public class ImageController {
 
     @PostMapping("/upload") // save?productId = 123123
     public ResponseEntity<ApiResponse> saveImages(
-            @RequestBody  List<MultipartFile> images, @RequestParam Long productId) {
+            @RequestParam  List<MultipartFile> images, @RequestParam Long productId) {
         try {
             List<ImageDto> imageDtos = imageService.saveImages(images, productId);
             return ResponseEntity.ok(new ApiResponse("Uploaded successfully!", imageDtos));
@@ -41,19 +41,20 @@ public class ImageController {
     }
 
     @GetMapping("/download/{imageId}")
-    public ResponseEntity<ApiResponse> downloadImage(@PathVariable Long imageId) {
-        try{
-            Image image= imageService.getImageById(imageId);
-            Blob imageBlob =  image.getImage();
+    public ResponseEntity<ByteArrayResource> downloadImage(@PathVariable Long imageId) {
+        try {
+            Image image = imageService.getImageById(imageId);
+            Blob imageBlob = image.getImage();
             ByteArrayResource resource = new ByteArrayResource(imageBlob.getBytes(1, (int) imageBlob.length()));
+
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(image.getFileType()))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+image.getFilename() +"\"")
-                    .body(new ApiResponse("Image sent!",resource));
-        }catch (Exception e) {
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFilename() + "\"")
+                    .body(resource);
+        } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse("Something went wrong!", e.getMessage()));
+                    .body(null);  // You may also choose to send an error message here
         }
     }
     @PutMapping("/image/{imageId}/update")

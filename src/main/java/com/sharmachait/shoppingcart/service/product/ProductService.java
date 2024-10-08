@@ -37,7 +37,9 @@ public class ProductService implements IProductService {
 //        return createProduct(productDto, category);
         Category category = categoryRepository.findByName(addProductDto.getCategory().getName());
         category = getOrInsertCategory(category,addProductDto.getCategory().getName());
-        return createProduct(addProductDto, category);
+        Product product = createProduct(addProductDto, category);
+        product = productRepository.save(product);
+        return product;
     }
     private Category getOrInsertCategory(Category category, String categoryName){
         if(category == null) {

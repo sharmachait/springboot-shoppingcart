@@ -123,7 +123,7 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> createProduct(AddProductDto productDto){
+    public ResponseEntity<ApiResponse> createProduct(@RequestBody AddProductDto productDto){
         try{
             Product product1 = productService.addProduct(productDto);
             return ResponseEntity.ok(new ApiResponse("Added product", product1));
