@@ -1,20 +1,25 @@
 package com.sharmachait.shoppingcart.service.product;
 
+import com.sharmachait.shoppingcart.dtos.ImageDto;
+import com.sharmachait.shoppingcart.dtos.ProductDto;
 import com.sharmachait.shoppingcart.dtos.add.AddProductDto;
 import com.sharmachait.shoppingcart.dtos.update.UpdateProductDto;
 import com.sharmachait.shoppingcart.exceptions.ProductNotFoundException;
 import com.sharmachait.shoppingcart.exceptions.ResourceNotFoundException;
 import com.sharmachait.shoppingcart.model.Category;
+import com.sharmachait.shoppingcart.model.Image;
 import com.sharmachait.shoppingcart.model.Product;
 import com.sharmachait.shoppingcart.repository.CategoryRepository;
 import com.sharmachait.shoppingcart.repository.ProductRepository;
 import lombok.Data;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Data
@@ -24,6 +29,23 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     @Autowired
     private final CategoryRepository categoryRepository;
+    @Autowired
+    private final ModelMapper modelMapper;
+    @Override
+    public ProductDto productToDto(Product product){
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        List<Image> images = product.getImages();
+        List<ImageDto> imageDtos = images.stream()
+                .map(image->modelMapper.map(image, ImageDto.class))
+                .collect(Collectors.toList());
+        productDto.setImages(imageDtos);
+        return productDto;
+    }
+
+    @Override
+    public List<ProductDto> productsToDtos(List<Product> products) {
+        return products.stream().map(product->productToDto(product)).collect(Collectors.toList());
+    }
 
     @Override
     public Product addProduct(AddProductDto addProductDto) {

@@ -15,8 +15,9 @@ public class Category {
   private Long id;
   private String name;
 
-  @OneToMany(mappedBy = "category")
+
 //  @JsonManagedReference
   @JsonIgnore
+  @OneToMany(mappedBy = "category")
   private List<Product> products;
 }

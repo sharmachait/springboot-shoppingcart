@@ -1,5 +1,6 @@
 package com.sharmachait.shoppingcart.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,6 +14,7 @@ public class Image {
     private Long id;
     private String filename;
     private String fileType;
+
     @Lob
     private Blob image;
     private String downloadUrl;

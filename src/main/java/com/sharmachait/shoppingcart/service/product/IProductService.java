@@ -1,5 +1,6 @@
 package com.sharmachait.shoppingcart.service.product;
 
+import com.sharmachait.shoppingcart.dtos.ProductDto;
 import com.sharmachait.shoppingcart.dtos.add.AddProductDto;
 import com.sharmachait.shoppingcart.dtos.update.UpdateProductDto;
 import com.sharmachait.shoppingcart.exceptions.ProductNotFoundException;
@@ -20,5 +21,6 @@ public interface IProductService {
     List<Product> getProductsByName(String name);
     List<Product> getProductsByBrandAndName(String brand, String name);
     Long countProductsByBrandAndName(String brand,String name);
-
+    ProductDto productToDto(Product product);
+    List<ProductDto> productsToDtos(List<Product> products);
 }
