@@ -18,6 +18,7 @@ import java.util.NoSuchElementException;
 @Service
 @Data
 public class CartItemService implements ICartItemService {
+
     @Autowired
     private final CartItemRepository cartItemRepository;
     @Autowired
@@ -62,11 +63,46 @@ public class CartItemService implements ICartItemService {
 
     @Override
     public void removeItemFromCart(Long cartId, Long productId) {
-
+        try {
+            CartItem cartItem = getCartItemFromCart(cartId, productId);
+            if (cartItem == null) {
+                throw new ResourceNotFoundException("CartItem not found");
+            }
+            Cart cart = cartService.getCart(cartId);
+            cart.removeItem(cartItem);
+            cartRepository.save(cart);
+        } catch (ResourceNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void updateItemQuantity(Long cartId, Long productId, int quantity) {
+        try{
+            Cart cart = cartService.getCart(cartId);
+            CartItem cartItem = getCartItemFromCart(cartId, productId);
+            if (cartItem == null) {
+                throw new ResourceNotFoundException("CartItem not found");
+            }
+            cartItem.setQuantity(quantity);
+            cartItem.setTotalPrice();
+            cart.updateTotalAmount();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    @Override
+    public CartItem getCartItemFromCart(Long cartId, Long productId){
+        try{
+            Cart cart = cartService.getCart(cartId);
+            CartItem cartItem = cart.getCartItems()
+                    .stream()
+                    .filter(item -> item.getProduct().getId().equals(productId))
+                    .findFirst().get();
+            return cartItem;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
