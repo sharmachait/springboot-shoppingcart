@@ -55,10 +55,16 @@ public class CartItemService implements ICartItemService {
         }else{
             cartItem.setQuantity(quantity + cartItem.getQuantity());
         }
-        cartItem.setTotalPrice();
-        cart.addItem(cartItem);
-        cartItemRepository.save(cartItem);
-        cartRepository.save(cart);
+
+        try{
+            cartItem.setTotalPrice();
+            cart.addItem(cartItem);
+            cartItemRepository.save(cartItem);
+            cartRepository.save(cart);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Data
 @Service
@@ -19,6 +20,17 @@ public class CartService implements ICartService {
     private final CartRepository cartRepository;
     @Autowired
     private final CartItemRepository cartItemRepository;
+
+    private final AtomicLong cartIdGenerator = new AtomicLong(0);
+
+    @Override
+    public Long initializeNewCart(){
+        Cart newCart = new Cart();
+//        Long newCartId = cartIdGenerator.incrementAndGet();
+//        newCart.setId(newCartId);
+        return cartRepository.save(newCart).getId();
+    }
+
     @Override
     public Cart getCart(Long id) throws ResourceNotFoundException {
         try{
